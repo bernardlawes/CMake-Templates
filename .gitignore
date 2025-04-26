@@ -1,0 +1,51 @@
+# Build and install folders
+**/build/
+**/install/
+
+# Visual Studio / Visual Studio Code files
+.vscode/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.user
+*.obj
+*.pdb
+*.idb
+*.ipch
+*.aps
+*.ncb
+*.suo
+*.opendb
+
+# CMake build artifacts
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Executables and binaries
+*.exe
+*.dll
+*.lib
+*.so
+*.a
+*.out
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Python cache (if you ever add Python utils later)
+__pycache__/
+*.pyc
+
+# Backup files
+*~
+*.bak
