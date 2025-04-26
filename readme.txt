@@ -1,4 +1,25 @@
 GITREPO-FOLDER/
+├── .gitignore          <-- Only one here
+├── .gitattributes      <-- Only one here
+├── Template-OpenCV-Modular/
+│   ├── CMakeLists.txt
+│   ├── Project1/
+│   └── Project2/
+├── Template-OpenCV-Orchestrated/
+│   ├── CMakeLists.txt
+│   ├── main.cpp
+│   ├── Project1/
+│   └── Project2/
+└── Template-OpenCV-Standalone/
+    ├── CMakeLists.txt
+    ├── main.cpp
+    ├── src/
+    └── include/
+
+
+
+
+GITREPO-FOLDER/
 ├──Template-OpenCV-Modular/
     ├── .gitignore
     ├── .gitattributes
