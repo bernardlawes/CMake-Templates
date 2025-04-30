@@ -1,0 +1,119 @@
+cmake_minimum_required(VERSION 3.16)
+
+set(PROJECT_NAME_MYAPP CVSandbox)
+
+project(${PROJECT_NAME_MYAPP})
+
+set(CMAKE_CXX_STANDARD 17)
+
+# Locate OpenCV via vcpkg
+find_package(OpenCV REQUIRED)
+
+include_directories(include ${OpenCV_INCLUDE_DIRS})
+
+file(GLOB SOURCES "src/*.cpp")
+
+add_executable(${PROJECT_NAME_MYAPP} main.cpp ${SOURCES})
+
+target_link_libraries(${PROJECT_NAME_MYAPP} ${OpenCV_LIBS})
+
+# === Paths ===
+set(VCPKG_ROOT "D:/Library/vcpkg")
+set(VCPKG_DLL_PATH_RELEASE "${VCPKG_ROOT}/installed/x64-windows/bin")
+set(VCPKG_DLL_PATH_DEBUG   "${VCPKG_ROOT}/installed/x64-windows/debug/bin")
+set(INSTALL_BIN_DIR "${CMAKE_SOURCE_DIR}/install/bin")
+
+
+
+
+
+# === DLL Copy Function ===
+function(copy_dlls_from_map dll_map)
+    list(LENGTH dll_map map_len)
+    math(EXPR count "${map_len} / 3 - 1")  # Because we're 0-based indexing
+
+    foreach(i RANGE 0 ${count})
+        math(EXPR idx_base "3 * ${i}")
+        math(EXPR idx_debug "${idx_base} + 1")
+        math(EXPR idx_release "${idx_base} + 2")
+
+        list(GET dll_map ${idx_base} name)
+        list(GET dll_map ${idx_debug} debug_name)
+        list(GET dll_map ${idx_release} release_name)
+
+        add_custom_command(TARGET ${PROJECT_NAME_MYAPP} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/${debug_name},${VCPKG_DLL_PATH_RELEASE}/${release_name}>"
+                "${INSTALL_BIN_DIR}"
+        )
+    endforeach()
+endfunction()
+
+
+
+set(DLL_MAP
+    opencv_core4      opencv_core4d.dll       opencv_core4.dll
+    opencv_imgproc4   opencv_imgproc4d.dll    opencv_imgproc4.dll
+    opencv_highgui4   opencv_highgui4d.dll    opencv_highgui4.dll
+    opencv_imgcodecs4 opencv_imgcodecs4d.dll  opencv_imgcodecs4.dll
+    opencv_videoio4   opencv_videoio4d.dll    opencv_videoio4.dll
+    opencv_photo4     opencv_photo4d.dll      opencv_photo4.dll
+    opencv_dnn4       opencv_dnn4d.dll        opencv_dnn4.dll
+
+    libpng16d         libpng16d.dll           libpng16d.dll
+    tiffd             tiffd.dll               tiffd.dll
+
+    jpeg62            jpeg62.dll              jpeg62.dll
+    libwebp           libwebp.dll             libwebp.dll
+    libwebpdecoder    libwebpdecoder.dll      libwebpdecoder.dll
+    libwebpdemux      libwebpdemux.dll        libwebpdemux.dll
+    libwebpmux        libwebpmux.dll          libwebpmux.dll
+    zlibd1            zlibd1.dll              zlibd1.dll
+    libsharpyuv       libsharpyuv.dll         libsharpyuv.dll
+    liblzma           liblzma.dll             liblzma.dll
+    
+)
+
+
+# === List of required DLLs ===
+#set(OPENCV_DLLS_NODEBUG
+#    jpeg62
+#    libwebp
+#    libwebpdecoder
+#    libwebpdemux
+#    libwebpmux
+#    libsharpyuv
+#    liblzma
+#    zlibd1
+#)
+
+
+# === List of required DLLs ===
+#set(OPENCV_DLLS
+#    opencv_core4
+#    opencv_imgproc4
+#    opencv_highgui4
+#    opencv_imgcodecs4
+#    opencv_videoio4
+#    opencv_photo4
+#    opencv_dnn4
+#    libpng16d
+#    tiffd
+#)
+
+# === Copy .exe to install/bin ===
+add_custom_command(TARGET ${PROJECT_NAME_MYAPP} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${INSTALL_BIN_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "$<TARGET_FILE:${PROJECT_NAME_MYAPP}>"
+        "${INSTALL_BIN_DIR}"
+)
+
+# === Copy DLLs to install/bin ===
+copy_dlls_from_map("${DLL_MAP}")
+
+
+
+
+# === Optional: Formal install target ===
+install(TARGETS ${PROJECT_NAME_MYAPP} DESTINATION bin)

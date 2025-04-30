@@ -1,0 +1,78 @@
+cmake_minimum_required(VERSION 3.16)
+
+set(PROJECT_NAME_MYAPP CVSandbox)
+
+project(${PROJECT_NAME_MYAPP})
+
+set(CMAKE_CXX_STANDARD 17)
+
+# Locate OpenCV via vcpkg
+find_package(OpenCV REQUIRED)
+
+include_directories(include ${OpenCV_INCLUDE_DIRS})
+
+file(GLOB SOURCES "src/*.cpp")
+
+add_executable(${PROJECT_NAME_MYAPP} main.cpp ${SOURCES})
+
+target_link_libraries(${PROJECT_NAME_MYAPP} ${OpenCV_LIBS})
+
+# === COPY DLLs (debug or release) depending on build type ===
+# Adjust for OpenCV 4 modular DLL layout in vcpkg
+set(VCPKG_DLL_PATH_RELEASE "D:/Library/vcpkg/installed/x64-windows/bin")
+set(VCPKG_DLL_PATH_DEBUG   "D:/Library/vcpkg/installed/x64-windows/debug/bin")
+
+#add_custom_command(TARGET ${PROJECT_NAME_MYAPP} POST_BUILD
+#    COMMAND ${CMAKE_COMMAND} -E echo "Copying OpenCV DLLs..."
+#    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/opencv_core4d.dll,${VCPKG_DLL_PATH_RELEASE}/opencv_core4.dll)" "$<TARGET_FILE_DIR:${PROJECT_NAME_MYAPP}>"
+#    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/opencv_imgproc4d.dll,${VCPKG_DLL_PATH_RELEASE}/opencv_imgproc4.dll)" "$<TARGET_FILE_DIR:${PROJECT_NAME_MYAPP}>"
+#    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/opencv_highgui4d.dll,${VCPKG_DLL_PATH_RELEASE}/opencv_highgui4.dll)" "$<TARGET_FILE_DIR:${PROJECT_NAME_MYAPP}>"
+#    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/opencv_imgcodecs4d.dll,${VCPKG_DLL_PATH_RELEASE}/opencv_imgcodecs4.dll)" "$<TARGET_FILE_DIR:${PROJECT_NAME_MYAPP}>"
+#    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/opencv_videoio4d.dll,${VCPKG_DLL_PATH_RELEASE}/opencv_videoio4d.dll)" "$<TARGET_FILE_DIR:${PROJECT_NAME_MYAPP}>"
+#    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/opencv_photo4d.dll,${VCPKG_DLL_PATH_RELEASE}/opencv_photo4d.dll)" "$<TARGET_FILE_DIR:${PROJECT_NAME_MYAPP}>"
+#    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/opencv_dnn4d.dll,${VCPKG_DLL_PATH_RELEASE}/opencv_dnn4d.dll)" "$<TARGET_FILE_DIR:${PROJECT_NAME_MYAPP}>"
+#)
+
+
+set(INSTALL_BIN_DIR "${CMAKE_SOURCE_DIR}/install/bin")
+
+ add_custom_command(TARGET ${PROJECT_NAME_MYAPP} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E echo "Copying OpenCV DLLs to install/bin..."
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/opencv_core4d.dll,${VCPKG_DLL_PATH_RELEASE}/opencv_core4.dll>" "${INSTALL_BIN_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/opencv_imgproc4d.dll,${VCPKG_DLL_PATH_RELEASE}/opencv_imgproc4.dll>" "${INSTALL_BIN_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/opencv_highgui4d.dll,${VCPKG_DLL_PATH_RELEASE}/opencv_highgui4.dll>" "${INSTALL_BIN_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/opencv_imgcodecs4d.dll,${VCPKG_DLL_PATH_RELEASE}/opencv_imgcodecs4.dll>" "${INSTALL_BIN_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/opencv_videoio4d.dll,${VCPKG_DLL_PATH_RELEASE}/opencv_videoio4d.dll>" "${INSTALL_BIN_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/opencv_photo4d.dll,${VCPKG_DLL_PATH_RELEASE}/opencv_photo4d.dll>" "${INSTALL_BIN_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/opencv_dnn4d.dll,${VCPKG_DLL_PATH_RELEASE}/opencv_dnn4d.dll>" "${INSTALL_BIN_DIR}"
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/libwebp.dll,${VCPKG_DLL_PATH_RELEASE}/libwebp.dll>" "${INSTALL_BIN_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/libwebpdecoder.dll,${VCPKG_DLL_PATH_RELEASE}/ibwebpdecoder.dll>" "${INSTALL_BIN_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/libwebpdemux.dll,${VCPKG_DLL_PATH_RELEASE}/libwebpdemux.dll>" "${INSTALL_BIN_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/jpeg62.dll,${VCPKG_DLL_PATH_RELEASE}/jpeg62.dll>" "${INSTALL_BIN_DIR}"
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/zlibd1.dll,${VCPKG_DLL_PATH_RELEASE}/zlibd1.dll>" "${INSTALL_BIN_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/libpng16d.dll,${VCPKG_DLL_PATH_RELEASE}/libpng16d.dll>" "${INSTALL_BIN_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/libwebpmux.dll,${VCPKG_DLL_PATH_RELEASE}/libwebpmux.dll>" "${INSTALL_BIN_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/tiffd.dll,${VCPKG_DLL_PATH_RELEASE}/tiffd.dll>" "${INSTALL_BIN_DIR}"
+
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/libsharpyuv.dll,${VCPKG_DLL_PATH_RELEASE}/libsharpyuv.dll>" "${INSTALL_BIN_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG}/liblzma.dll,${VCPKG_DLL_PATH_RELEASE}/liblzma.dll>" "${INSTALL_BIN_DIR}"
+
+)
+
+
+# Install this single executable
+install(TARGETS ${PROJECT_NAME_MYAPP} DESTINATION bin)
+
+#set(VCPKG_ROOT "D:/Library/vcpkg")  # update this to match your actual vcpkg path
+#set(VCPKG_DLL_PATH_RELEASE "${VCPKG_ROOT}/installed/x64-windows/bin")
+#set(VCPKG_DLL_PATH_DEBUG   "${VCPKG_ROOT}/installed/x64-windows/debug/bin")
+#set(INSTALL_BIN_DIR "${CMAKE_SOURCE_DIR}/install/bin")
+
+#add_custom_command(TARGET ${PROJECT_NAME_MYAPP} POST_BUILD
+#    COMMAND powershell -ExecutionPolicy Bypass -File "${VCPKG_ROOT}/scripts/buildsystems/msbuild/applocal.ps1"
+#        -targetBinary "${INSTALL_BIN_DIR}/${PROJECT_NAME_MYAPP}.exe"
+#        -installedDir "$<IF:$<CONFIG:Debug>,${VCPKG_DLL_PATH_DEBUG},${VCPKG_DLL_PATH_RELEASE}>"
+#    COMMENT "Running vcpkg applocal to copy DLLs to install/bin"
+#)
