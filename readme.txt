@@ -73,3 +73,25 @@ A flexible set of C++ repositories powered by **CMake**, **CMakeSettings.json**,
 1. Clone the template you need:
    ```bash
    git clone https://github.com/yourusername/cpp-cmake-templates.git
+
+
+Open in Visual Studio or run build.bat.
+
+Run launch.ps1 to select modules or execute orchestrator.
+
+📄 License
+MIT License — use freely and modify for your own workflows.
+
+🙋‍♂️ Author
+Created by Bernard Lawes
+For devs who want speed, structure, and scriptable automation in modern C++.
+
+
+### ✅ Clarifying “Orchestrated” vs. “Modular”
+
+- **Modular**: You write many small programs, each with its own `main()` and logic. The user picks one to run from a menu.
+- **Orchestrated**: You write **one `main()`** that **calls the modules**, directing how they work together (e.g., preprocess → analyze → report).
+
+So:  
+- Modular = Lego pieces you can run alone  
+- Orchestrated = One master controller arranging and executing those pieces
