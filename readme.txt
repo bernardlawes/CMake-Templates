@@ -1,6 +1,6 @@
 # 🛠️ C++ CMake Project Templates
 
-A collection of C++ CMake and automated build scripts (.bat and .ps1), supporting multiple architectural patterns for fast prototyping and scalable application structure.
+A collection of CMake Templates and automated build scripts (.bat and .ps1), supporting multiple architectural patterns for fast prototyping and scalable application structure.
 
 ---
 
