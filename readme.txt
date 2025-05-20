@@ -1,6 +1,6 @@
 # 🛠️ C++ CMake Project Templates
 
-A flexible set of C++ repositories powered by **CMake**, **CMakeSettings.json**, and automated build scripts (`.bat` and `.ps1`), supporting multiple architectural patterns for fast prototyping and scalable application structure.
+A flexible set of C++ CMake, CMakeSettings.json, automated build scripts (.bat and .ps1), supporting multiple architectural patterns for fast prototyping and scalable application structure.
 
 ---
 
